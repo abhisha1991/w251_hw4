@@ -6,6 +6,9 @@ import collections
 import operator
 import tensorflow as tf
 import tensorflow_hub as hub
+import tensorflow.compat.v1 as tf1
+#To make tf 2.0 compatible with tf1.0 code, we disable the tf2.0 functionalities
+tf1.disable_eager_execution()
 
 Class = collections.namedtuple('Class', ['id', 'score'])
 
@@ -48,14 +51,14 @@ def runClass(classifier_url,image,runCount,k,threshold):
         module = hub.Module(classifier_url)
         # height, width = hub.get_expected_image_size(module)
 
-	# from here, https://tfhub.dev/google/efficientnet/b0/classification/1 - we see image size is 224 x 224
-	# from here, https://tfhub.dev/google/efficientnet/b4/classification/1 - we see image size is 380 x 380
-	# from here, https://tfhub.dev/google/efficientnet/b7/classification/1 - we see image size is 600 x 600
-	img_size = 224 # take b0 as default
-	if "b4" in classifier_url:
-		img_size = 380
-	elif "b7" in classifier_url
-		img_size = 600
+    # from here, https://tfhub.dev/google/efficientnet/b0/classification/1 - we see image size is 224 x 224
+    # from here, https://tfhub.dev/google/efficientnet/b4/classification/1 - we see image size is 380 x 380
+    # from here, https://tfhub.dev/google/efficientnet/b7/classification/1 - we see image size is 600 x 600
+        img_size = 224 # take b0 as default
+        if "b4" in classifier_url:
+            img_size = 380
+        elif "b7" in classifier_url:
+            img_size = 600
 
         IMAGE_SHAPE = (img_size, img_size)
         classifier = tf.keras.Sequential([
@@ -100,7 +103,7 @@ def main():
       '-i', '--image', required=True, help='image to use')
 
     parser.add_argument(
-      '-k', '--top_k', type=int, default=1,
+      '-k', '--top_k', type=int, default=5,
       help='Max number of classification results')
     parser.add_argument(
       '-t', '--threshold', type=float, default=0.0,
